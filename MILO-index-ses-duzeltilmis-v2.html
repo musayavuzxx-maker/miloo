@@ -1,0 +1,3790 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111936">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MİLO">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/milo-192.png">
+<link rel="apple-touch-icon" href="icons/milo-192.png">
+
+<title>MİLO Robot - Öğren ve Oyna</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    min-height:100vh;
+    overflow:hidden;
+    background:#111936;
+    color:white;
+}
+
+button{
+    font-family:inherit;
+    border:none;
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.game{
+    width:100%;
+    max-width:1100px;
+    min-height:100vh;
+    margin:auto;
+    padding:15px;
+    position:relative;
+}
+
+
+/* =====================================================
+   MİLO
+===================================================== */
+
+.milo{
+    width:170px;
+    height:185px;
+    position:relative;
+    margin:auto;
+}
+
+.milo-head{
+    position:absolute;
+    left:20px;
+    top:25px;
+    width:130px;
+    height:95px;
+    background:#f8fbff;
+    border:6px solid #42dbe8;
+    border-radius:32px;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.milo-face{
+    position:absolute;
+    left:10px;
+    top:12px;
+    width:98px;
+    height:58px;
+    background:#151a34;
+    border-radius:18px;
+}
+
+.eye{
+    position:absolute;
+    top:19px;
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:#43e1eb;
+    box-shadow:0 0 10px #43e1eb;
+}
+
+.eye.left{
+    left:20px;
+}
+
+.eye.right{
+    right:20px;
+}
+
+.mouth{
+    position:absolute;
+    left:37px;
+    top:38px;
+    width:25px;
+    height:10px;
+    border-bottom:4px solid #43e1eb;
+    border-radius:50%;
+}
+
+.antenna{
+    position:absolute;
+    width:5px;
+    height:30px;
+    background:#43dce7;
+    top:0;
+    z-index:2;
+}
+
+.antenna.left{
+    left:57px;
+    transform:rotate(-20deg);
+}
+
+.antenna.right{
+    right:57px;
+    transform:rotate(20deg);
+}
+
+.antenna-dot{
+    position:absolute;
+    left:-4px;
+    top:-8px;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#ff5596;
+}
+
+.milo-body{
+    position:absolute;
+    left:40px;
+    top:115px;
+    width:90px;
+    height:65px;
+    border:6px solid #42dbe8;
+    background:#f8fbff;
+    border-radius:22px;
+}
+
+.milo-heart{
+    position:absolute;
+    left:28px;
+    top:13px;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background:#ff5596;
+}
+
+
+/* =====================================================
+   ANİMASYONLAR
+===================================================== */
+
+.milo-hello{
+    animation:miloHello 1s ease;
+}
+
+@keyframes miloHello{
+
+    0%{
+        transform:translateY(20px);
+    }
+
+    40%{
+        transform:translateY(-15px) rotate(-5deg);
+    }
+
+    70%{
+        transform:translateY(0) rotate(5deg);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+}
+
+.milo-happy{
+    animation:miloHappy .8s ease;
+}
+
+@keyframes miloHappy{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    30%{
+        transform:translateY(-25px) rotate(-6deg);
+    }
+
+    60%{
+        transform:translateY(0) rotate(6deg);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+}
+
+
+/* =====================================================
+   AÇILIŞ
+===================================================== */
+
+#intro{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(150deg,#202653,#101329);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.intro-box{
+    text-align:center;
+}
+
+.intro-box .milo{
+    transform:scale(1.15);
+}
+
+.intro-title{
+    font-size:52px;
+    font-weight:900;
+    color:#45dbe8;
+    margin-top:15px;
+}
+
+.intro-text{
+    font-size:22px;
+    margin-top:10px;
+    color:#fff;
+}
+
+
+/* =====================================================
+   MENÜ
+===================================================== */
+
+#menu{
+    animation:menuAppear .7s ease;
+}
+
+@keyframes menuAppear{
+
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.menu-milo{
+    text-align:center;
+    margin-top:-5px;
+}
+
+.menu-title{
+    text-align:center;
+    font-size:44px;
+    font-weight:900;
+    margin-top:-5px;
+}
+
+.menu-subtitle{
+    text-align:center;
+    font-size:18px;
+    margin-bottom:20px;
+    opacity:.9;
+}
+
+.category-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    max-width:760px;
+    margin:auto;
+}
+
+.category{
+    width:100%;
+    min-height:82px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    padding:10px 18px;
+    color:white;
+    background:#202950;
+    border:2px solid #34406e;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    transition:.25s;
+    position:relative;
+    overflow:hidden;
+}
+
+.category:hover{
+    transform:scale(1.015);
+    border-color:#4eddea;
+}
+
+.category:active{
+    transform:scale(.98);
+}
+
+.category-icon{
+    width:65px;
+    font-size:35px;
+}
+
+.category-name{
+    flex:1;
+    text-align:left;
+}
+
+.category-name strong{
+    display:block;
+    font-size:21px;
+}
+
+.category-name span{
+    display:block;
+    font-size:13px;
+    margin-top:4px;
+    opacity:.85;
+}
+
+.category-preview{
+    display:flex;
+    gap:7px;
+}
+
+.preview{
+    width:40px;
+    height:40px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#222;
+    font-size:19px;
+    font-weight:900;
+    border-radius:10px;
+}
+
+.preview-balloon{
+    width:40px;
+    height:47px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-weight:900;
+}
+
+
+/* =====================================================
+   KATEGORİ GİRİŞ
+===================================================== */
+
+#categoryIntro{
+    position:fixed;
+    inset:0;
+    background:#111936;
+    z-index:900;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.category-intro-box{
+    text-align:center;
+}
+
+.category-object{
+    width:120px;
+    height:120px;
+    margin:15px auto;
+    border-radius:30px;
+    background:white;
+    color:#222;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
+    font-weight:900;
+    box-shadow:0 15px 30px rgba(0,0,0,.3);
+}
+
+.category-intro-title{
+    font-size:34px;
+    font-weight:900;
+}
+
+.category-start-text{
+    margin-top:10px;
+    font-size:21px;
+}
+
+
+/* =====================================================
+   ÜST BAR
+===================================================== */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.back-btn,
+.previous-btn{
+    background:#29345d;
+    color:white;
+    padding:9px 13px;
+    border-radius:13px;
+    font-size:17px;
+    font-weight:900;
+}
+
+.previous-btn{
+    background:#26345f;
+}
+
+.previous-btn:disabled{
+    opacity:.35;
+    cursor:not-allowed;
+}
+
+.level-info{
+    font-weight:900;
+    font-size:18px;
+}
+
+.star-info{
+    color:#ffd449;
+    font-size:20px;
+}
+
+.progress{
+    width:100%;
+    height:9px;
+    background:#30395f;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0;
+    border-radius:20px;
+    transition:.4s;
+}
+
+
+/* =====================================================
+   OYUN MİLO
+===================================================== */
+
+.game-milo{
+    height:135px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.game-milo .milo{
+    transform:scale(.7);
+    margin-top:-15px;
+}
+
+
+/* =====================================================
+   SORU
+===================================================== */
+
+.question-area{
+    text-align:center;
+}
+
+.question{
+    font-size:27px;
+    min-height:35px;
+    font-weight:900;
+}
+
+.target-big{
+    margin-top:0;
+    font-size:65px;
+    font-weight:900;
+    color:#53e3ee;
+}
+
+
+/* =====================================================
+   SEÇENEK ALANI
+===================================================== */
+
+.play-area{
+    height:260px;
+    border-radius:30px;
+    background:radial-gradient(circle,#343b70,#202748);
+    position:relative;
+    overflow:hidden;
+    margin-top:5px;
+}
+
+.moving-answer{
+    position:absolute;
+    width:78px;
+    height:78px;
+    border-radius:15px;
+    background:white;
+    color:#ed4f91;
+    font-size:40px;
+    font-weight:900;
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
+    transition:left 1.5s ease,top 1.5s ease,transform .2s;
+}
+
+.moving-answer:hover{
+    transform:scale(1.08);
+}
+
+
+/* =====================================================
+   BALON
+===================================================== */
+
+.balloon-area{
+    height:275px;
+    position:relative;
+    overflow:hidden;
+    border-radius:30px;
+    background:radial-gradient(circle,#343b70,#202748);
+}
+
+.game-balloon{
+    position:absolute;
+    width:94px;
+    height:112px;
+    border-radius:50%;
+    color:white;
+    font-size:40px;
+    font-weight:900;
+    box-shadow:0 12px 20px rgba(0,0,0,.3);
+    transition:left 1.8s ease,top 1.8s ease,transform .3s;
+}
+
+.game-balloon::after{
+    content:"";
+    position:absolute;
+    width:2px;
+    height:38px;
+    background:rgba(255,255,255,.5);
+    left:50%;
+    top:100%;
+}
+
+.balloon-wrong{
+    animation:balloonWrong .45s ease;
+}
+
+@keyframes balloonWrong{
+
+    0%,100%{
+        transform:translateX(0);
+    }
+
+    25%{
+        transform:translateX(-7px);
+    }
+
+    75%{
+        transform:translateX(7px);
+    }
+
+}
+
+.balloon-pop{
+    animation:balloonPop .5s forwards;
+}
+
+@keyframes balloonPop{
+
+    0%{
+        transform:scale(1);
+    }
+
+    60%{
+        transform:scale(1.35);
+    }
+
+    100%{
+        transform:scale(0);
+        opacity:0;
+    }
+
+}
+
+
+/* =====================================================
+   DOĞRU CEVAP
+===================================================== */
+
+.correct-stage{
+    min-height:390px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding-top:10px;
+}
+
+.correct-only{
+    width:130px;
+    height:130px;
+    border-radius:30px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
+    font-weight:900;
+    color:#ed4f91;
+    box-shadow:0 15px 30px rgba(0,0,0,.25);
+    animation:correctAppear .5s ease;
+}
+
+@keyframes correctAppear{
+
+    from{
+        transform:scale(.5);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+
+/* =====================================================
+   KELİMELER
+===================================================== */
+
+.examples{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:15px;
+}
+
+.example-card{
+    min-width:210px;
+    max-width:260px;
+    min-height:145px;
+    background:#30395f;
+    border-radius:25px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    opacity:0;
+    transform:scale(.8);
+}
+
+.example-card.show{
+    animation:exampleShow .6s forwards;
+}
+
+@keyframes exampleShow{
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+
+}
+
+.example-visual{
+    width:95px;
+    height:95px;
+    border-radius:20px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:62px;
+    flex-shrink:0;
+}
+
+.example-word{
+    font-size:30px;
+    font-weight:900;
+}
+
+.example-first{
+    color:#ff4f95;
+}
+
+.example-rest{
+    color:white;
+}
+
+
+/* =====================================================
+   MESAJ
+===================================================== */
+
+.message{
+    text-align:center;
+    min-height:35px;
+    margin-top:5px;
+    font-size:25px;
+    font-weight:900;
+}
+
+.message.good{
+    color:#56e78a;
+}
+
+.message.try{
+    color:#ffd34e;
+}
+
+
+/* =====================================================
+   KOŞAN MİLO
+===================================================== */
+
+#runScene{
+    position:fixed;
+    inset:0;
+    z-index:800;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.running-ground{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:120px;
+    background:rgba(0,0,0,.12);
+}
+
+.running-milo{
+    position:absolute;
+    bottom:80px;
+    left:-230px;
+    width:170px;
+    height:185px;
+}
+
+.running-milo.go{
+    animation:miloWalk 3s linear forwards;
+}
+
+@keyframes miloWalk{
+
+    0%{
+        left:-220px;
+        transform:translateY(0);
+    }
+
+    15%{
+        transform:translateY(-18px) rotate(-3deg);
+    }
+
+    30%{
+        transform:translateY(0) rotate(3deg);
+    }
+
+    45%{
+        transform:translateY(-18px) rotate(-3deg);
+    }
+
+    60%{
+        transform:translateY(0) rotate(3deg);
+    }
+
+    75%{
+        transform:translateY(-18px) rotate(-3deg);
+    }
+
+    100%{
+        left:calc(100% + 30px);
+        transform:translateY(0);
+    }
+
+}
+
+.held-object{
+    position:absolute;
+    right:-5px;
+    top:35px;
+    width:65px;
+    height:65px;
+    border-radius:20px;
+    background:#ffd449;
+    color:#222;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:35px;
+    font-weight:900;
+    transform:rotate(-8deg);
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+
+
+/* =====================================================
+   ÖDÜL
+===================================================== */
+
+.reward{
+    position:fixed;
+    left:50%;
+    top:50%;
+    z-index:1000;
+    font-size:90px;
+    pointer-events:none;
+    opacity:0;
+}
+
+.reward.show{
+    animation:rewardAnimation 1s ease;
+}
+
+@keyframes rewardAnimation{
+
+    0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.2);
+    }
+
+    40%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.5);
+    }
+
+    100%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.5);
+    }
+
+}
+
+
+/* =====================================================
+   MOBİL
+===================================================== */
+
+@media(max-width:650px){
+
+    .game{
+        padding:9px;
+    }
+
+    .menu-title{
+        font-size:38px;
+    }
+
+    .category{
+        min-height:76px;
+        padding:8px 12px;
+    }
+
+    .category-icon{
+        width:50px;
+        font-size:29px;
+    }
+
+    .category-name strong{
+        font-size:16px;
+    }
+
+    .category-name span{
+        font-size:11px;
+    }
+
+    .preview{
+        width:32px;
+        height:32px;
+        font-size:15px;
+    }
+
+    .preview-balloon{
+        width:32px;
+        height:40px;
+        font-size:14px;
+    }
+
+    .game-milo{
+        height:110px;
+    }
+
+    .play-area{
+        height:240px;
+    }
+
+    .game-balloon{
+        width:82px;
+        height:98px;
+        font-size:35px;
+    }
+
+    .examples{
+        gap:8px;
+    }
+
+    .example-card{
+        min-width:150px;
+        min-height:115px;
+        padding:8px;
+    }
+
+    .example-visual{
+        width:65px;
+        height:65px;
+        font-size:42px;
+    }
+
+    .example-word{
+        font-size:23px;
+    }
+
+}
+
+
+/* =====================================================
+   MİLO MOBİL DOKUNMATİK OPTİMİZASYON
+===================================================== */
+html{
+    -webkit-text-size-adjust:100%;
+    touch-action:manipulation;
+}
+
+body{
+    padding-bottom:env(safe-area-inset-bottom);
+    padding-top:env(safe-area-inset-top);
+    -webkit-tap-highlight-color:transparent;
+}
+
+button,
+[role="button"]{
+    touch-action:manipulation;
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-touch-callout:none;
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+@media (max-width:650px){
+    body{
+        min-height:100dvh;
+        height:100dvh;
+    }
+
+    .game{
+        min-height:100dvh;
+    }
+
+    input,
+    button{
+        font-size:16px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     AÇILIŞ
+===================================================== -->
+
+<div id="intro">
+
+    <div class="intro-box">
+
+        <div class="milo milo-hello">
+
+            <div class="antenna left">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="antenna right">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="milo-head">
+
+                <div class="milo-face">
+
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+
+                    <div class="mouth"></div>
+
+                </div>
+
+            </div>
+
+            <div class="milo-body">
+
+                <div class="milo-heart"></div>
+
+            </div>
+
+        </div>
+
+        <div class="intro-title">
+            MİLO
+        </div>
+
+        <div id="introText" class="intro-text">
+            Merhaba! Ben MİLO Robot.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     KATEGORİ INTRO
+===================================================== -->
+
+<div id="categoryIntro" class="hidden">
+
+    <div class="category-intro-box">
+
+        <div id="categoryMilo" class="milo milo-hello">
+
+            <div class="antenna left">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="antenna right">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="milo-head">
+
+                <div class="milo-face">
+
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+
+                    <div class="mouth"></div>
+
+                </div>
+
+            </div>
+
+            <div class="milo-body">
+
+                <div class="milo-heart"></div>
+
+            </div>
+
+        </div>
+
+        <div id="categoryObject" class="category-object"></div>
+
+        <div id="categoryIntroTitle" class="category-intro-title"></div>
+
+        <div id="categoryStartText" class="category-start-text"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ANA MENÜ
+===================================================== -->
+
+<div id="menu" class="game hidden">
+
+    <div class="menu-milo">
+
+        <div class="milo">
+
+            <div class="antenna left">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="antenna right">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="milo-head">
+
+                <div class="milo-face">
+
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+
+                    <div class="mouth"></div>
+
+                </div>
+
+            </div>
+
+            <div class="milo-body">
+
+                <div class="milo-heart"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="menu-title">
+        MİLO
+    </div>
+
+    <div class="menu-subtitle">
+        Haydi öğrenelim ve oynayalım!
+    </div>
+
+    <div class="category-list">
+
+        <button class="category" onclick="selectCategory('letters')">
+
+            <div class="category-icon">🔤</div>
+
+            <div class="category-name">
+                <strong>1. HARFLER</strong>
+                <span>Türkçe alfabeyi öğren</span>
+            </div>
+
+            <div class="category-preview">
+                <div class="preview">A</div>
+                <div class="preview">B</div>
+                <div class="preview">C</div>
+            </div>
+
+        </button>
+
+
+        <button class="category" onclick="selectCategory('letterBalloon')">
+
+            <div class="category-icon">🎈</div>
+
+            <div class="category-name">
+                <strong>2. HARF BALONU</strong>
+                <span>Doğru harf balonunu bul</span>
+            </div>
+
+            <div class="category-preview">
+
+                <div class="preview-balloon" style="background:#ff5795">
+                    A
+                </div>
+
+                <div class="preview-balloon" style="background:#4d9bea">
+                    B
+                </div>
+
+            </div>
+
+        </button>
+
+
+        <button class="category" onclick="selectCategory('numbers')">
+
+            <div class="category-icon">🔢</div>
+
+            <div class="category-name">
+                <strong>3. SAYILAR</strong>
+                <span>0'dan 10'a kadar sayıları öğren</span>
+            </div>
+
+            <div class="category-preview">
+
+                <div class="preview">0</div>
+                <div class="preview">1</div>
+
+            </div>
+
+        </button>
+
+
+        <button class="category" onclick="selectCategory('numberBalloon')">
+
+            <div class="category-icon">🎈</div>
+
+            <div class="category-name">
+                <strong>4. SAYI BALONU</strong>
+                <span>Sayı balonlarını yakala</span>
+            </div>
+
+            <div class="category-preview">
+
+                <div class="preview-balloon" style="background:#20a68d">
+                    0
+                </div>
+
+                <div class="preview-balloon" style="background:#358fdf">
+                    1
+                </div>
+
+            </div>
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     OYUN
+===================================================== -->
+
+<div id="game" class="game hidden">
+
+    <div class="topbar">
+
+        <button class="back-btn" onclick="backToMenu()">
+            ← Menü
+        </button>
+
+        <button
+            id="previousLevelButton"
+            class="previous-btn"
+            onclick="previousLevel()">
+            ←
+        </button>
+
+        <div class="level-info">
+            LEVEL
+            <span id="levelNumber">1</span>
+            /
+            <span id="maxLevel">29</span>
+        </div>
+
+        <div class="star-info">
+            ⭐
+            <span id="starCount">0</span>
+        </div>
+
+    </div>
+
+
+    <div class="progress">
+
+        <div id="progressFill" class="progress-fill"></div>
+
+    </div>
+
+
+    <div class="game-milo">
+
+        <div id="gameMilo" class="milo">
+
+            <div class="antenna left">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="antenna right">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="milo-head">
+
+                <div class="milo-face">
+
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+
+                    <div class="mouth"></div>
+
+                </div>
+
+            </div>
+
+            <div class="milo-body">
+
+                <div class="milo-heart"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="question-area">
+
+        <div id="question" class="question"></div>
+
+        <div id="targetBig" class="target-big"></div>
+
+    </div>
+
+
+    <div id="playArea" class="play-area hidden"></div>
+
+    <div id="balloonArea" class="balloon-area hidden"></div>
+
+
+    <div id="correctStage" class="correct-stage hidden">
+
+        <div id="correctOnly" class="correct-only"></div>
+
+        <div id="examples" class="examples"></div>
+
+    </div>
+
+
+    <div id="message" class="message"></div>
+
+</div>
+
+
+<!-- =====================================================
+     KOŞAN MİLO
+===================================================== -->
+
+<div id="runScene" class="hidden">
+
+    <div class="running-ground"></div>
+
+    <div id="runningMilo" class="running-milo">
+
+        <div class="milo">
+
+            <div class="antenna left">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="antenna right">
+                <div class="antenna-dot"></div>
+            </div>
+
+            <div class="milo-head">
+
+                <div class="milo-face">
+
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+
+                    <div class="mouth"></div>
+
+                </div>
+
+            </div>
+
+            <div class="milo-body">
+
+                <div class="milo-heart"></div>
+
+            </div>
+
+        </div>
+
+        <div id="heldObject" class="held-object"></div>
+
+    </div>
+
+</div>
+
+
+<div id="reward" class="reward">
+    ⭐
+</div>
+
+
+<script>
+
+/* =====================================================
+   TÜRKÇE ALFABE
+===================================================== */
+
+const alphabet = [
+    "A","B","C","Ç","D","E","F",
+    "G","Ğ","H","I","İ","J","K",
+    "L","M","N","O","Ö","P","R",
+    "S","Ş","T","U","Ü","V","Y","Z"
+];
+
+
+/* =====================================================
+   SAYILAR
+===================================================== */
+
+const numbers = [
+    0,1,2,3,4,5,6,7,8,9,10
+];
+
+const numberWords = {
+
+    0:"Sıfır",
+    1:"Bir",
+    2:"İki",
+    3:"Üç",
+    4:"Dört",
+    5:"Beş",
+    6:"Altı",
+    7:"Yedi",
+    8:"Sekiz",
+    9:"Dokuz",
+    10:"On"
+
+};
+
+
+/* =====================================================
+   NET HARF SESLERİ
+===================================================== */
+
+const letterSpeech = {
+
+    "A":"A",
+
+    "B":"Be",
+
+    "C":"Ce",
+
+    "Ç":"Çe",
+
+    "D":"De",
+
+    "E":"E",
+
+    "F":"Fe",
+
+    "G":"Ge",
+
+    "Ğ":"Yumuşak Ge",
+
+    "H":"He",
+
+    "I":"I",
+
+    "İ":"İ",
+
+    "J":"Je",
+
+    "K":"Ka",
+
+    "L":"Le",
+
+    "M":"Me",
+
+    "N":"Ne",
+
+    "O":"O",
+
+    "Ö":"Ö",
+
+    "P":"Pe",
+
+    "R":"Re",
+
+    "S":"Se",
+
+    "Ş":"Şe",
+
+    "T":"Te",
+
+    "U":"U",
+
+    "Ü":"Ü",
+
+    "V":"Ve",
+
+    "Y":"Ye",
+
+    "Z":"Ze"
+
+};
+
+
+/* =====================================================
+   KELİMELER
+===================================================== */
+
+const words = {
+
+A:[
+    ["Araba","🚗"],
+    ["Ayva","🍐"],
+    ["Ağaç","🌳"],
+    ["Arı","🐝"],
+    ["At","🐴"]
+],
+
+B:[
+    ["Balık","🐟"],
+    ["Bebek","👶"],
+    ["Balon","🎈"],
+    ["Bulut","☁️"],
+    ["Baykuş","🦉"]
+],
+
+C:[
+    ["Ceviz","🌰"],
+    ["Ceket","🧥"],
+    ["Cetvel","📏"],
+    ["Civciv","🐥"],
+    ["Cami","🕌"]
+],
+
+Ç:[
+    ["Çilek","🍓"],
+    ["Çanta","🎒"],
+    ["Çiçek","🌸"],
+    ["Çorap","🧦"],
+    ["Çocuk","🧒"]
+],
+
+D:[
+    ["Dede","👴"],
+    ["Dondurma","🍦"],
+    ["Davul","🥁"],
+    ["Deniz","🌊"],
+    ["Diş","🦷"]
+],
+
+E:[
+    ["Elma","🍎"],
+    ["Ev","🏠"],
+    ["Ekmek","🍞"],
+    ["El","✋"],
+    ["Eşek","🫏"]
+],
+
+F:[
+    ["Fil","🐘"],
+    ["Fener","🏮"],
+    ["Fare","🐭"],
+    ["Fırça","🪥"],
+    ["Futbol","⚽"]
+],
+
+G:[
+    ["Gemi","🚢"],
+    ["Gül","🌹"],
+    ["Güneş","☀️"],
+    ["Gitar","🎸"],
+    ["Geyik","🦌"]
+],
+
+H:[
+    ["Havuç","🥕"],
+    ["Horoz","🐓"],
+    ["Hediye","🎁"],
+    ["Helikopter","🚁"],
+    ["Hırka","🧥"]
+],
+
+I:[
+    ["Işık","💡"],
+    ["Irmak","🏞️"],
+    ["Ihlamur","🌳"],
+    ["Ispanak","🥬"],
+    ["Islak","💧"]
+],
+
+İ:[
+    ["İnek","🐄"],
+    ["İp","🧵"],
+    ["İncir","🫒"],
+    ["İğne","🪡"],
+    ["İnci","🦪"]
+],
+
+J:[
+    ["Jel","🧴"],
+    ["Jöle","🍮"],
+    ["Jakuzi","🛁"],
+    ["Jandarma","👮"],
+    ["Jelibon","🍬"]
+],
+
+K:[
+    ["Kedi","🐱"],
+    ["Kalem","✏️"],
+    ["Kitap","📚"],
+    ["Kelebek","🦋"],
+    ["Karpuz","🍉"]
+],
+
+L:[
+    ["Limon","🍋"],
+    ["Leylek","🦩"],
+    ["Lale","🌷"],
+    ["Lamba","💡"],
+    ["Leğen","🪣"]
+],
+
+M:[
+    ["Masa","🪑"],
+    ["Maymun","🐒"],
+    ["Muz","🍌"],
+    ["Makas","✂️"],
+    ["Mısır","🌽"]
+],
+
+N:[
+    ["Nar","❤️"],
+    ["Nehir","🏞️"],
+    ["Nane","🌿"],
+    ["Nohut","🫘"],
+    ["Nergis","🌼"]
+],
+
+O:[
+    ["Okul","🏫"],
+    ["Otobüs","🚌"],
+    ["Orman","🌲"],
+    ["Oyuncak","🧸"],
+    ["Oyun","🎮"]
+],
+
+Ö:[
+    ["Ördek","🦆"],
+    ["Öğretmen","👩‍🏫"],
+    ["Önlük","🥼"],
+    ["Örümcek","🕷️"],
+    ["Öküz","🐂"]
+],
+
+P:[
+    ["Pasta","🎂"],
+    ["Penguen","🐧"],
+    ["Panda","🐼"],
+    ["Patik","🧦"],
+    ["Papatya","🌼"]
+],
+
+R:[
+    ["Robot","🤖"],
+    ["Renk","🎨"],
+    ["Roket","🚀"],
+    ["Radyo","📻"],
+    ["Rüzgar","🌬️"]
+],
+
+S:[
+    ["Saat","⏰"],
+    ["Simit","🥯"],
+    ["Salıncak","🎠"],
+    ["Sincap","🐿️"],
+    ["Su","💧"]
+],
+
+Ş:[
+    ["Şapka","🧢"],
+    ["Şeker","🍬"],
+    ["Şemsiye","☂️"],
+    ["Şeftali","🍑"],
+    ["Şişe","🍼"]
+],
+
+T:[
+    ["Top","⚽"],
+    ["Tavşan","🐰"],
+    ["Tren","🚂"],
+    ["Tabak","🍽️"],
+    ["Timsah","🐊"]
+],
+
+U:[
+    ["Uçak","✈️"],
+    ["Uçurtma","🪁"],
+    ["Usta","👷"],
+    ["Umut","🌟"],
+    ["Uyku","😴"]
+],
+
+Ü:[
+    ["Üzüm","🍇"],
+    ["Ütü","👕"],
+    ["Üçgen","🔺"],
+    ["Ünlü","⭐"],
+    ["Üzengi","🐎"]
+],
+
+V:[
+    ["Vazo","🏺"],
+    ["Vapur","⛴️"],
+    ["Valiz","🧳"],
+    ["Vişne","🍒"],
+    ["Voleybol","🏐"]
+],
+
+Y:[
+    ["Yaprak","🍃"],
+    ["Yıldız","⭐"],
+    ["Yumurta","🥚"],
+    ["Yoğurt","🥣"],
+    ["Yelken","⛵"]
+],
+
+Z:[
+    ["Zebra","🦓"],
+    ["Zil","🔔"],
+    ["Zürafa","🦒"],
+    ["Zeytin","🫒"],
+    ["Zarf","✉️"]
+]
+
+};
+
+
+/* =====================================================
+   DEĞİŞKENLER
+===================================================== */
+
+let selectedCategory = "";
+
+let currentLevel = 1;
+
+let stars = 0;
+
+let target = "";
+
+let locked = false;
+
+let repeatTimer = null;
+
+let balloonTimer = null;
+
+let movingTimer = null;
+
+
+/* =====================================================
+   SES KUYRUĞU - iPHONE / SAFARI UYUMLU
+===================================================== */
+
+let speechQueue = Promise.resolve();
+let availableVoices = [];
+let selectedVoice = null;
+let speechUnlocked = false;
+
+function wait(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function loadVoices(){
+    if(!('speechSynthesis' in window)) return;
+
+    availableVoices = speechSynthesis.getVoices() || [];
+
+    const turkish = availableVoices.filter(voice =>
+        voice.lang && voice.lang.toLowerCase().startsWith('tr')
+    );
+
+    selectedVoice =
+        turkish.find(voice => voice.lang.toLowerCase() === 'tr-tr') ||
+        turkish[0] ||
+        availableVoices.find(voice =>
+            voice.lang && voice.lang.toLowerCase().startsWith('tr')
+        ) ||
+        availableVoices[0] ||
+        null;
+}
+
+if('speechSynthesis' in window){
+    speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+}
+
+/*
+   iPhone/Safari'de ses motorunu ilk kullanıcı
+   dokunuşuyla uyandırıyoruz. Bundan sonra oyun
+   içindeki sesler normal şekilde sıraya girer.
+*/
+function unlockSpeech(){
+    if(!('speechSynthesis' in window)) return;
+
+    speechUnlocked = true;
+    loadVoices();
+
+    try{
+        speechSynthesis.resume();
+    }catch(e){}
+}
+
+document.addEventListener('touchstart', unlockSpeech, {
+    passive:true,
+    once:true
+});
+
+document.addEventListener('pointerdown', unlockSpeech, {
+    passive:true,
+    once:true
+});
+
+document.addEventListener('click', unlockSpeech, {
+    passive:true,
+    once:true
+});
+
+/*
+   Tek bir konuşma üretir.
+   Burada cancel() KULLANILMIYOR; çünkü konuşmalar
+   zaten kuyrukta sırayla ilerliyor.
+*/
+function speak(text){
+    return new Promise(resolve => {
+
+        if(!('speechSynthesis' in window) || !text){
+            resolve();
+            return;
+        }
+
+        loadVoices();
+
+        const utterance = new SpeechSynthesisUtterance(String(text));
+
+        utterance.lang = 'tr-TR';
+        utterance.rate = 0.72;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        if(selectedVoice){
+            utterance.voice = selectedVoice;
+        }
+
+        let finished = false;
+
+        const finish = () => {
+            if(finished) return;
+            finished = true;
+            resolve();
+        };
+
+        utterance.onend = finish;
+        utterance.onerror = finish;
+        utterance.oncancel = finish;
+
+        try{
+            speechSynthesis.resume();
+            speechSynthesis.speak(utterance);
+        }catch(e){
+            finish();
+            return;
+        }
+
+        /* Bazı iPhone/Safari sürümlerinde onend gelmeyebilir. */
+        setTimeout(finish, 9000);
+    });
+}
+
+function queueSpeak(text){
+    speechQueue = speechQueue
+        .catch(() => {})
+        .then(() => speak(text));
+
+    return speechQueue;
+}
+
+/* =====================================================
+   SESİ TEMİZLE
+===================================================== */
+
+function clearSpeech(){
+    if('speechSynthesis' in window){
+        try{
+            speechSynthesis.cancel();
+            speechSynthesis.resume();
+        }catch(e){}
+    }
+
+    speechQueue = Promise.resolve();
+}
+
+
+/* =====================================================
+   HARF SESİ
+===================================================== */
+
+function speakLetter(letter){
+
+    return queueSpeak(
+        letterSpeech[letter] || letter
+    );
+
+}
+
+
+/* =====================================================
+   SAYI SESİ
+===================================================== */
+
+function speakNumber(number){
+
+    return queueSpeak(
+        numberWords[number]
+    );
+
+}
+
+
+/* =====================================================
+   TEŞVİK
+===================================================== */
+
+const goodMessages = [
+
+    "Harika!",
+    "Süpersin!",
+    "Bravo!",
+    "Aferin!",
+    "Çok güzel!",
+    "Şahane!",
+    "Müthiş!",
+    "Çok iyi!",
+    "Bunu da bildin!",
+    "Harika gidiyorsun!",
+    "Çok başarılısın!",
+    "Süper iş çıkardın!",
+    "Bravo küçük kaşif!",
+    "Mükemmel!",
+    "Ne kadar dikkatlisin!"
+
+];
+
+
+const tryMessages = [
+
+    "Güzel deneme!",
+    "Bir kez daha bakalım!",
+    "Yaklaştın!",
+    "Milo sana inanıyor!",
+    "Haydi tekrar deneyelim!",
+    "Dikkatlice bak!",
+    "Bir tane daha deneyelim!",
+    "Pes etmek yok!",
+    "Biraz daha düşün!",
+    "Birlikte bulabiliriz!",
+    "Çok güzel denedin!",
+    "Bir şans daha!",
+    "Dikkatini topla!"
+
+];
+
+
+function randomItem(array){
+
+    return array[
+        Math.floor(
+            Math.random()*array.length
+        )
+    ];
+
+}
+
+
+/* =====================================================
+   AÇILIŞ
+===================================================== */
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        setTimeout(
+            ()=>{
+                queueSpeak(
+                    "Merhaba! Ben Milo Robot."
+                );
+            },
+            500
+        );
+
+
+        setTimeout(
+            ()=>{
+
+                document
+                .getElementById("intro")
+                .classList
+                .add("hidden");
+
+
+                document
+                .getElementById("menu")
+                .classList
+                .remove("hidden");
+
+            },
+            3000
+        );
+
+    }
+);
+
+
+/* =====================================================
+   KATEGORİ
+===================================================== */
+
+const categoryData = {
+
+    letters:{
+        title:"Harfler",
+        icon:"🔤",
+        max:29,
+        progress:"#ed4f91"
+    },
+
+    letterBalloon:{
+        title:"Harf Balonu",
+        icon:"🎈",
+        max:29,
+        progress:"#8657d4"
+    },
+
+    numbers:{
+        title:"Sayılar",
+        icon:"🔢",
+        max:11,
+        progress:"#358fdf"
+    },
+
+    numberBalloon:{
+        title:"Sayı Balonu",
+        icon:"🎈",
+        max:11,
+        progress:"#20a68d"
+    }
+
+};
+
+
+/* =====================================================
+   KATEGORİ SEÇ
+===================================================== */
+
+function selectCategory(category){
+
+    selectedCategory =
+        category;
+
+
+    currentLevel =
+        loadLevel(category);
+
+
+    /*
+       Eğer kategori daha önce
+       tamamen bitirilmişse
+       tekrar açıldığında 1. level.
+    */
+
+    const max =
+        categoryData[category].max;
+
+
+    if(currentLevel > max){
+
+        currentLevel=1;
+
+    }
+
+
+    stars =
+        loadStars(category);
+
+
+    document
+    .getElementById("menu")
+    .classList
+    .add("hidden");
+
+
+    const intro =
+        document.getElementById(
+            "categoryIntro"
+        );
+
+
+    intro.classList.remove(
+        "hidden"
+    );
+
+
+    const data =
+        categoryData[category];
+
+
+    document
+    .getElementById("categoryObject")
+    .innerText =
+        data.icon;
+
+
+    document
+    .getElementById("categoryIntroTitle")
+    .innerText =
+        data.title;
+
+
+    document
+    .getElementById("categoryStartText")
+    .innerText =
+        "MİLO ile öğrenmeye hazır mısın?";
+
+
+    queueSpeak(
+        data.title
+    );
+
+
+    setTimeout(
+        ()=>{
+
+            intro
+            .classList
+            .add("hidden");
+
+
+            document
+            .getElementById("game")
+            .classList
+            .remove("hidden");
+
+
+            startLevel();
+
+        },
+        1800
+    );
+
+}
+
+
+/* =====================================================
+   KAYIT
+===================================================== */
+
+function loadLevel(category){
+
+    const data =
+        JSON.parse(
+            localStorage.getItem(
+                "miloGameData"
+            ) || "{}"
+        );
+
+
+    return data[category]?.level || 1;
+
+}
+
+
+function loadStars(category){
+
+    const data =
+        JSON.parse(
+            localStorage.getItem(
+                "miloGameData"
+            ) || "{}"
+        );
+
+
+    return data[category]?.stars || 0;
+
+}
+
+
+function saveGame(){
+
+    const data =
+        JSON.parse(
+            localStorage.getItem(
+                "miloGameData"
+            ) || "{}"
+        );
+
+
+    data[selectedCategory]={
+
+        level:currentLevel,
+
+        stars:stars
+
+    };
+
+
+    localStorage.setItem(
+        "miloGameData",
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* =====================================================
+   ÖNCEKİ LEVEL
+===================================================== */
+
+function previousLevel(){
+
+    if(currentLevel <= 1){
+        return;
+    }
+
+
+    speechSynthesis.cancel();
+
+    speechQueue =
+        Promise.resolve();
+
+
+    clearInterval(repeatTimer);
+    clearInterval(balloonTimer);
+    clearInterval(movingTimer);
+
+
+    locked=false;
+
+
+    currentLevel--;
+
+
+    saveGame();
+
+
+    startLevel();
+
+}
+
+
+/* =====================================================
+   LEVEL BAŞLAT
+===================================================== */
+
+function startLevel(){
+
+    locked=false;
+
+
+    speechSynthesis.cancel();
+
+    speechQueue =
+        Promise.resolve();
+
+
+    clearInterval(repeatTimer);
+
+    clearInterval(balloonTimer);
+
+    clearInterval(movingTimer);
+
+
+    const data =
+        categoryData[
+            selectedCategory
+        ];
+
+
+    document
+    .getElementById("levelNumber")
+    .innerText =
+    currentLevel;
+
+
+    document
+    .getElementById("maxLevel")
+    .innerText =
+    data.max;
+
+
+    document
+    .getElementById("starCount")
+    .innerText =
+    stars;
+
+
+    document
+    .getElementById("progressFill")
+    .style.width =
+    (
+        currentLevel /
+        data.max *
+        100
+    )+"%";
+
+
+    document
+    .getElementById("progressFill")
+    .style.background =
+    data.progress;
+
+
+    /*
+       Önceki level oku.
+    */
+
+    document
+    .getElementById("previousLevelButton")
+    .disabled =
+        currentLevel <= 1;
+
+
+    document
+    .getElementById("message")
+    .innerText="";
+
+
+    document
+    .getElementById("correctStage")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("examples")
+    .innerHTML="";
+
+
+    if(
+        selectedCategory==="letters" ||
+        selectedCategory==="letterBalloon"
+    ){
+
+        createLetterLevel();
+
+    }else{
+
+        createNumberLevel();
+
+    }
+
+}
+
+
+/* =====================================================
+   HARF LEVEL
+===================================================== */
+
+function createLetterLevel(){
+
+    target =
+        alphabet[
+            currentLevel-1
+        ];
+
+
+    document
+    .getElementById("question")
+    .innerText =
+    "Harfini bul!";
+
+
+    document
+    .getElementById("targetBig")
+    .innerText =
+    target;
+
+
+    /*
+       Hedefi net okut.
+    */
+
+    speakLetter(target);
+
+
+    /*
+       2 saniye sonra hedef açıklaması.
+    */
+
+    setTimeout(
+        ()=>{
+
+            if(!locked){
+
+                queueSpeak(
+                    `${letterSpeech[target]} harfini bul!`
+                );
+
+            }
+
+        },
+        2000
+    );
+
+
+    startRepeat();
+
+
+    if(
+        selectedCategory==="letters"
+    ){
+
+        createMovingLetters();
+
+    }else{
+
+        createLetterBalloons();
+
+    }
+
+}
+
+
+/* =====================================================
+   SAYI LEVEL
+===================================================== */
+
+function createNumberLevel(){
+
+    target =
+        numbers[
+            currentLevel-1
+        ];
+
+
+    document
+    .getElementById("question")
+    .innerText =
+    "Sayıyı bul!";
+
+
+    document
+    .getElementById("targetBig")
+    .innerText =
+    target;
+
+
+    speakNumber(target);
+
+
+    setTimeout(
+        ()=>{
+
+            if(!locked){
+
+                queueSpeak(
+                    `${numberWords[target]} sayısını bul!`
+                );
+
+            }
+
+        },
+        2000
+    );
+
+
+    startRepeat();
+
+
+    if(
+        selectedCategory==="numbers"
+    ){
+
+        createNumberChoices();
+
+    }else{
+
+        createNumberBalloons();
+
+    }
+
+}
+
+
+/* =====================================================
+   TEKRAR SESİ
+===================================================== */
+
+function startRepeat(){
+
+    clearInterval(
+        repeatTimer
+    );
+
+
+    repeatTimer =
+        setInterval(
+            ()=>{
+
+                if(!locked){
+
+                    if(
+                        selectedCategory==="letters" ||
+                        selectedCategory==="letterBalloon"
+                    ){
+
+                        speakLetter(target);
+
+                    }else{
+
+                        speakNumber(target);
+
+                    }
+
+                }
+
+            },
+            7000
+        );
+
+}
+
+
+/* =====================================================
+   HARF SEÇENEKLERİ
+===================================================== */
+
+function createMovingLetters(){
+
+    const area =
+        document.getElementById(
+            "playArea"
+        );
+
+
+    area.classList.remove(
+        "hidden"
+    );
+
+
+    document
+    .getElementById("balloonArea")
+    .classList
+    .add("hidden");
+
+
+    let options=[target];
+
+
+    while(options.length<3){
+
+        const random =
+            randomItem(alphabet);
+
+
+        if(!options.includes(random)){
+
+            options.push(random);
+
+        }
+
+    }
+
+
+    options.sort(
+        ()=>Math.random()-.5
+    );
+
+
+    area.innerHTML="";
+
+
+    options.forEach(
+        (letter,index)=>{
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className=
+                "moving-answer";
+
+
+            button.innerText=
+                letter;
+
+
+            button.style.left=
+                (8+index*31)+"%";
+
+
+            button.style.top=
+                (20+Math.random()*45)+"%";
+
+
+            button.onclick=
+                ()=>{
+                    checkAnswer(
+                        letter,
+                        button
+                    );
+                };
+
+
+            area.appendChild(button);
+
+        }
+    );
+
+
+    movingTimer =
+        setInterval(
+            moveLetters,
+            3000
+        );
+
+}
+
+
+/* =====================================================
+   HARFLERİ HAREKET ETTİR
+===================================================== */
+
+function moveLetters(){
+
+    if(locked){
+        return;
+    }
+
+
+    document
+    .querySelectorAll(
+        ".moving-answer"
+    )
+    .forEach(
+        item=>{
+
+            item.style.left=
+                (5+Math.random()*78)+"%";
+
+
+            item.style.top=
+                (5+Math.random()*70)+"%";
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SAYI SEÇENEKLERİ
+===================================================== */
+
+function createNumberChoices(){
+
+    const area =
+        document.getElementById(
+            "playArea"
+        );
+
+
+    area.classList.remove(
+        "hidden"
+    );
+
+
+    document
+    .getElementById("balloonArea")
+    .classList
+    .add("hidden");
+
+
+    let options=[target];
+
+
+    while(options.length<3){
+
+        const random =
+            randomItem(numbers);
+
+
+        if(!options.includes(random)){
+
+            options.push(random);
+
+        }
+
+    }
+
+
+    options.sort(
+        ()=>Math.random()-.5
+    );
+
+
+    area.innerHTML="";
+
+
+    options.forEach(
+        (number,index)=>{
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className=
+                "moving-answer";
+
+
+            button.innerText=
+                number;
+
+
+            button.style.color=
+                "#358fdf";
+
+
+            button.style.left=
+                (8+index*31)+"%";
+
+
+            button.style.top=
+                (20+Math.random()*45)+"%";
+
+
+            button.onclick=
+                ()=>{
+                    checkAnswer(
+                        number,
+                        button
+                    );
+                };
+
+
+            area.appendChild(button);
+
+        }
+    );
+
+
+    movingTimer =
+        setInterval(
+            moveLetters,
+            3000
+        );
+
+}
+
+
+/* =====================================================
+   BALONLAR
+===================================================== */
+
+function createLetterBalloons(){
+
+    createBalloons(
+        alphabet,
+        target
+    );
+
+}
+
+
+function createNumberBalloons(){
+
+    createBalloons(
+        numbers,
+        target
+    );
+
+}
+
+
+function createBalloons(
+    source,
+    correct
+){
+
+    const area =
+        document.getElementById(
+            "balloonArea"
+        );
+
+
+    area.classList.remove(
+        "hidden"
+    );
+
+
+    document
+    .getElementById("playArea")
+    .classList
+    .add("hidden");
+
+
+    let options=[correct];
+
+
+    while(options.length<3){
+
+        const item =
+            randomItem(source);
+
+
+        if(!options.includes(item)){
+
+            options.push(item);
+
+        }
+
+    }
+
+
+    options.sort(
+        ()=>Math.random()-.5
+    );
+
+
+    area.innerHTML="";
+
+
+    const balloonColors=[
+        "#ff5795",
+        "#4d9bea",
+        "#8657d4"
+    ];
+
+
+    options.forEach(
+        (value,index)=>{
+
+            const balloon =
+                document.createElement(
+                    "button"
+                );
+
+
+            balloon.className=
+                "game-balloon";
+
+
+            balloon.innerText=
+                value;
+
+
+            balloon.style.background=
+                balloonColors[index];
+
+
+            /*
+               Yan yana,
+               büyük ama ekranı
+               kaplamayacak şekilde.
+            */
+
+            balloon.style.left=
+                (8+index*31)+"%";
+
+
+            balloon.style.top=
+                "25%";
+
+
+            balloon.onclick=
+                ()=>{
+                    checkAnswer(
+                        value,
+                        balloon
+                    );
+                };
+
+
+            area.appendChild(
+                balloon
+            );
+
+        }
+    );
+
+
+    balloonTimer =
+        setInterval(
+            moveBalloonsIndependently,
+            2200
+        );
+
+}
+
+
+/* =====================================================
+   BALON HAFİF HAREKET
+===================================================== */
+
+function moveBalloonsIndependently(){
+
+    if(locked){
+        return;
+    }
+
+
+    const balloons =
+        document.querySelectorAll(
+            ".game-balloon"
+        );
+
+
+    balloons.forEach(
+        balloon=>{
+
+            const currentLeft =
+                parseFloat(
+                    balloon.style.left
+                ) || 10;
+
+
+            const currentTop =
+                parseFloat(
+                    balloon.style.top
+                ) || 25;
+
+
+            const newLeft =
+                Math.max(
+                    5,
+                    Math.min(
+                        78,
+                        currentLeft+
+                        (-3+Math.random()*6)
+                    )
+                );
+
+
+            const newTop =
+                Math.max(
+                    12,
+                    Math.min(
+                        55,
+                        currentTop+
+                        (-3+Math.random()*6)
+                    )
+                );
+
+
+            balloon.style.left=
+                newLeft+"%";
+
+
+            balloon.style.top=
+                newTop+"%";
+
+
+            balloon.style.transform=
+                "rotate("+
+                (-3+Math.random()*6)+
+                "deg)";
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   CEVAP
+===================================================== */
+
+function checkAnswer(
+    answer,
+    clicked
+){
+
+    if(locked){
+        return;
+    }
+
+
+    if(
+        String(answer) ===
+        String(target)
+    ){
+
+        correctAnswer(clicked);
+
+    }else{
+
+        wrongAnswer(clicked);
+
+    }
+
+}
+
+
+/* =====================================================
+   YANLIŞ
+===================================================== */
+
+function wrongAnswer(clicked){
+
+    if(clicked){
+
+        clicked.classList.remove(
+            "balloon-wrong"
+        );
+
+
+        void clicked.offsetWidth;
+
+
+        clicked.classList.add(
+            "balloon-wrong"
+        );
+
+    }
+
+
+    const message =
+        randomItem(
+            tryMessages
+        );
+
+
+    document
+    .getElementById("message")
+    .innerText =
+    message;
+
+
+    document
+    .getElementById("message")
+    .className =
+    "message try";
+
+
+    queueSpeak(message);
+
+
+    /*
+       Hemen ardından hedefi
+       tekrar söyleme.
+       Önce 2 saniye bekle.
+    */
+
+    setTimeout(
+        ()=>{
+
+            if(!locked){
+
+                if(
+                    selectedCategory==="letters" ||
+                    selectedCategory==="letterBalloon"
+                ){
+
+                    speakLetter(target);
+
+                }else{
+
+                    speakNumber(target);
+
+                }
+
+            }
+
+        },
+        2000
+    );
+
+}
+
+
+/* =====================================================
+   DOĞRU
+===================================================== */
+
+async function correctAnswer(clicked){
+
+    locked=true;
+
+
+    clearInterval(repeatTimer);
+    clearInterval(movingTimer);
+    clearInterval(balloonTimer);
+
+
+    stars++;
+
+
+    saveGame();
+
+
+    document
+    .getElementById("starCount")
+    .innerText =
+    stars;
+
+
+    /*
+       Milo zıplar.
+    */
+
+    const milo =
+        document.getElementById(
+            "gameMilo"
+        );
+
+
+    milo.classList.remove(
+        "milo-happy"
+    );
+
+
+    void milo.offsetWidth;
+
+
+    milo.classList.add(
+        "milo-happy"
+    );
+
+
+    const praise =
+        randomItem(
+            goodMessages
+        );
+
+
+    document
+    .getElementById("message")
+    .innerText =
+    praise;
+
+
+    document
+    .getElementById("message")
+    .className =
+    "message good";
+
+
+    /*
+       Doğru cevap sesi.
+    */
+
+    await queueSpeak(
+        praise
+    );
+
+
+    /*
+       2 saniye bekle.
+    */
+
+    await wait(2000);
+
+
+    /*
+       Doğru balon POP.
+    */
+
+    if(
+        selectedCategory==="letterBalloon" ||
+        selectedCategory==="numberBalloon"
+    ){
+
+        clicked.classList.add(
+            "balloon-pop"
+        );
+
+    }
+
+
+    /*
+       Diğer seçenekleri kaldır.
+    */
+
+    if(
+        selectedCategory==="letterBalloon" ||
+        selectedCategory==="numberBalloon"
+    ){
+
+        document
+        .querySelectorAll(
+            ".game-balloon"
+        )
+        .forEach(
+            balloon=>{
+
+                if(
+                    balloon!==clicked
+                ){
+
+                    balloon.remove();
+
+                }
+
+            }
+        );
+
+    }else{
+
+        document
+        .querySelectorAll(
+            ".moving-answer"
+        )
+        .forEach(
+            answer=>{
+
+                if(
+                    answer!==clicked
+                ){
+
+                    answer.remove();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+       2 saniye sonra kelime
+       sahnesine geç.
+    */
+
+    await wait(2000);
+
+
+    showCorrectStage();
+
+}
+
+
+/* =====================================================
+   DOĞRU SAHNE
+===================================================== */
+
+function showCorrectStage(){
+
+    document
+    .getElementById("playArea")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("balloonArea")
+    .classList
+    .add("hidden");
+
+
+    const stage =
+        document.getElementById(
+            "correctStage"
+        );
+
+
+    stage.classList.remove(
+        "hidden"
+    );
+
+
+    document
+    .getElementById("correctOnly")
+    .innerText =
+    target;
+
+
+    if(
+        selectedCategory==="letters" ||
+        selectedCategory==="letterBalloon"
+    ){
+
+        showLetterExamples();
+
+    }else{
+
+        setTimeout(
+            ()=>{
+                startMiloRun();
+            },
+            1500
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   KELİME ÖRNEKLERİ
+===================================================== */
+
+async function showLetterExamples(){
+
+    const container =
+        document.getElementById(
+            "examples"
+        );
+
+
+    container.innerHTML="";
+
+
+    const pool =
+        words[target];
+
+
+    if(!pool){
+
+        setTimeout(
+            startMiloRun,
+            1500
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Her levelde farklı kelimeler
+       seçmeye çalış.
+    */
+
+    const shuffled =
+        [...pool].sort(
+            ()=>Math.random()-.5
+        );
+
+
+    const selected =
+        shuffled.slice(0,2);
+
+
+    /*
+       1. kelime
+    */
+
+    await wait(500);
+
+
+    await createExample(
+        selected[0],
+        container
+    );
+
+
+    /*
+       Kelime bittikten sonra
+       2 saniye.
+    */
+
+    await wait(2000);
+
+
+    /*
+       2. kelime
+    */
+
+    await createExample(
+        selected[1],
+        container
+    );
+
+
+    /*
+       İkinci kelime bittikten sonra
+       2 saniye.
+    */
+
+    await wait(2000);
+
+
+    /*
+       Sonraki level.
+    */
+
+    startMiloRun();
+
+}
+
+
+/* =====================================================
+   ÖRNEK OLUŞTUR
+===================================================== */
+
+async function createExample(
+    item,
+    container
+){
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className=
+        "example-card";
+
+
+    const visual =
+        document.createElement(
+            "div"
+        );
+
+
+    visual.className=
+        "example-visual";
+
+
+    visual.innerText=
+        item[1];
+
+
+    const word =
+        document.createElement(
+            "div"
+        );
+
+
+    word.className=
+        "example-word";
+
+
+    const first =
+        document.createElement(
+            "span"
+        );
+
+
+    first.className=
+        "example-first";
+
+
+    first.innerText=
+        item[0].charAt(0);
+
+
+    const rest =
+        document.createElement(
+            "span"
+        );
+
+
+    rest.className=
+        "example-rest";
+
+
+    rest.innerText=
+        item[0].substring(1);
+
+
+    word.appendChild(first);
+
+    word.appendChild(rest);
+
+
+    card.appendChild(visual);
+
+    card.appendChild(word);
+
+
+    container.appendChild(card);
+
+
+    setTimeout(
+        ()=>{
+            card.classList.add("show");
+        },
+        50
+    );
+
+
+    /*
+       Kelimeyi net söyle.
+    */
+
+    await queueSpeak(
+        item[0]
+    );
+
+}
+
+
+/* =====================================================
+   MİLO KOŞUSU
+===================================================== */
+
+function startMiloRun(){
+
+    document
+    .getElementById("runScene")
+    .classList
+    .remove("hidden");
+
+
+    const runner =
+        document.getElementById(
+            "runningMilo"
+        );
+
+
+    const held =
+        document.getElementById(
+            "heldObject"
+        );
+
+
+    held.innerText=
+        target;
+
+
+    runner.classList.remove("go");
+
+
+    void runner.offsetWidth;
+
+
+    setTimeout(
+        ()=>{
+            runner.classList.add("go");
+        },
+        400
+    );
+
+
+    setTimeout(
+        ()=>{
+            nextLevel();
+        },
+        3500
+    );
+
+}
+
+
+/* =====================================================
+   SONRAKİ LEVEL
+===================================================== */
+
+function nextLevel(){
+
+    const max =
+        categoryData[
+            selectedCategory
+        ].max;
+
+
+    if(
+        currentLevel < max
+    ){
+
+        currentLevel++;
+
+
+        saveGame();
+
+
+        startLevel();
+
+    }else{
+
+        finishCategory();
+
+    }
+
+}
+
+
+/* =====================================================
+   KATEGORİ BİTİŞ
+===================================================== */
+
+function finishCategory(){
+
+    /*
+       Kategori tamamlandıktan sonra
+       tekrar açıldığında 1. levelden
+       başlayabilsin.
+    */
+
+    const data =
+        JSON.parse(
+            localStorage.getItem(
+                "miloGameData"
+            ) || "{}"
+        );
+
+
+    data[selectedCategory]={
+
+        level:1,
+
+        stars:stars,
+
+        completed:true
+
+    };
+
+
+    localStorage.setItem(
+        "miloGameData",
+        JSON.stringify(data)
+    );
+
+
+    document
+    .getElementById("question")
+    .innerText =
+    "Tebrikler!";
+
+
+    document
+    .getElementById("targetBig")
+    .innerText =
+    "🏆";
+
+
+    document
+    .getElementById("playArea")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("balloonArea")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("correctStage")
+    .classList
+    .add("hidden");
+
+
+    const message =
+        "Bu kategoriyi tamamladın!";
+
+
+    document
+    .getElementById("message")
+    .innerText =
+    message;
+
+
+    document
+    .getElementById("message")
+    .className =
+    "message good";
+
+
+    queueSpeak(
+        "Tebrikler! Bu kategoriyi tamamladın!"
+    );
+
+
+    showReward();
+
+
+    setTimeout(
+        ()=>{
+            backToMenu();
+        },
+        4000
+    );
+
+}
+
+
+/* =====================================================
+   ÖDÜL
+===================================================== */
+
+function showReward(){
+
+    const reward =
+        document.getElementById(
+            "reward"
+        );
+
+
+    reward.classList.remove(
+        "show"
+    );
+
+
+    void reward.offsetWidth;
+
+
+    reward.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   MENÜYE DÖN
+===================================================== */
+
+function backToMenu(){
+
+    speechSynthesis.cancel();
+
+    speechQueue =
+        Promise.resolve();
+
+
+    clearInterval(repeatTimer);
+
+    clearInterval(movingTimer);
+
+    clearInterval(balloonTimer);
+
+
+    document
+    .getElementById("game")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("runScene")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("categoryIntro")
+    .classList
+    .add("hidden");
+
+
+    document
+    .getElementById("menu")
+    .classList
+    .remove("hidden");
+
+
+    currentLevel =
+        loadLevel(
+            selectedCategory
+        );
+
+
+    stars =
+        loadStars(
+            selectedCategory
+        );
+
+}
+
+</script>
+
+
+<script>
+/* MİLO PWA */
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js").catch(function () {
+            // Oyun, servis çalışanı olmadan da normal şekilde çalışmaya devam eder.
+        });
+    });
+}
+</script>
+
+</body>
+</html>
